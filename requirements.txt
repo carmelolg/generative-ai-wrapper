@@ -1,0 +1,4 @@
+poe-api-wrapper==1.4.0
+poe-api-wrapper[async]==1.4.0
+redis==5.1.0b4
+python-dotenv==1.0.1
