@@ -1,7 +1,15 @@
 from persistence.RedisManager import RedisManager
+from services.PromptService import PromptService
 from utils.Constants import Constants
 from poe_api_wrapper import PoeApi
 import json
+
+
+def normalizeThreadId(thread):
+    if thread is not None and len(thread) > 0:
+        return int(thread)
+    else:
+        return None
 
 
 class PoeService(object):
@@ -16,22 +24,30 @@ class PoeService(object):
         poeTokenLat = self.__constants.poeTokenLat
         return json.loads(json.dumps({"b": poeTokenB, "lat": poeTokenLat}))
 
-    def chat(self, message, model=__constants.poeModel):
+    def chat(self, message, files: list=[], model=__constants.poeModel):
 
         if model is None:
             raise Exception("Model is not defined")
 
-        prompt = (f"Give me a response in 10 word about the following question: {message} "
-                  "The response should have the following pattern [Question]: My question \n[Response]: Your "
-                  "response \n[ChatCode] The chat code")
+        promptService = PromptService()
+        promptService.defineLanguage('italiano')
+        promptService.definePattern('[Domanda]: la mia domanda\n[Risposta]: la tua risposta\n')
+        promptService.defineAdditionalContext('Elabora una risposta come se ti rivolgessi ad un bambino')
+        promptService.defineMessage('Perché facciamo la cacca?')
+
+        #prompt = (f"Give me a response in 10 word about the following question: {message} "
+        #          "The response should have the following pattern [Question]: My question \n[Response]: Your "
+        #          "response \n[ChatCode] The chat code")
+
+        prompt = promptService.getPrompt()
 
         thread = self.__db.getValue('poeId')
+        thread = normalizeThreadId(thread)
 
         client = PoeApi(cookie=self.tokens())
 
-        for chunk in client.send_message(self.__constants.poeModel, prompt, chatId=int(thread)):
+        for chunk in client.send_message(self.__constants.poeModel, prompt, chatId=thread, file_path=files):
             print(chunk["response"], end="", flush=True)
         print("\n")
 
         self.__db.setValue('poeId', chunk['chatId'])
-
