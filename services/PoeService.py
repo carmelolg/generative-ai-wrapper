@@ -1,5 +1,5 @@
 from persistence.RedisManager import RedisManager
-from services.PromptService import PromptService
+from domain.PromptBuilder import PromptBuilder, Prompt
 from utils.Constants import Constants
 from poe_api_wrapper import PoeApi
 import json
@@ -24,22 +24,16 @@ class PoeService(object):
         poeTokenLat = self.__constants.poeTokenLat
         return json.loads(json.dumps({"b": poeTokenB, "lat": poeTokenLat}))
 
-    def chat(self, message, files: list=[], model=__constants.poeModel):
+    def chat(self, prompt: Prompt, files: list=[], model=__constants.poeModel):
 
         if model is None:
             raise Exception("Model is not defined")
-
-        promptService = PromptService()
-        promptService.defineLanguage('italiano')
-        promptService.definePattern('[Domanda]: la mia domanda\n[Risposta]: la tua risposta\n')
-        promptService.defineAdditionalContext('Elabora una risposta come se ti rivolgessi ad un bambino')
-        promptService.defineMessage('Perché facciamo la cacca?')
 
         #prompt = (f"Give me a response in 10 word about the following question: {message} "
         #          "The response should have the following pattern [Question]: My question \n[Response]: Your "
         #          "response \n[ChatCode] The chat code")
 
-        prompt = promptService.getPrompt()
+        prompt = prompt.getFullPrompt()
 
         thread = self.__db.getValue('poeId')
         thread = normalizeThreadId(thread)
