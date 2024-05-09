@@ -1,13 +1,10 @@
-from services.PoeService import PoeService
-from domain.PromptBuilder import PromptBuilder
+from services.SentimentalAnalysisService import SentimentalAnalysisService
+from services.ClassifierService import ClassifierService
 
+#sentimentalAnalyzer = SentimentalAnalysisService()
+#sentiment = sentimentalAnalyzer.run('La mia ragazza mi ha lasciato', 'italiano')
+#print(sentiment)
 
-poeService = PoeService()
-
-promptBuilder = PromptBuilder()
-promptBuilder.defineLanguage('italiano')
-promptBuilder.definePattern('\n[Domanda]: la mia domanda\n[Risposta]: la tua risposta\n')
-promptBuilder.defineAdditionalContext('Usa come prima fonte il menu che ti ho passato in input')
-promptBuilder.defineQuestion("Di cosa parla il file in input?")
-
-poeService.chat(promptBuilder.build(), ['https://irp.cdn-website.com/2cc0bde3/files/uploaded/menu%20completo%20pdf.pdf'])
+classifier = ClassifierService()
+_class = classifier.run("Sono alto 184 cm e mi piace molto andare allo stadio. Cosa sono?", ['Uomo', 'Donna', 'bambino', 'bambina'])
+print(_class)
