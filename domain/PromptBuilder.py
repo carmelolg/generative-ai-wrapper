@@ -34,7 +34,7 @@ class PromptBuilder(object):
         return self
 
     def question(self, message):
-        self._prompt.question += f"{message}\n"
+        self._prompt.question += f"The question is: {message}\n"
         return self
 
     def file(self, filename, content):
