@@ -22,7 +22,7 @@ from services.ChatService import ChatService
 #print(_summary)
 
 chatService = ChatService()
-_chat = chatService.run("Generate a MIT License file in markdown.")
+_chat = chatService.run(file='./domain/PromptBuilder.py',  message="can you generate the docstring of the file in input?", lang='english')
 print(_chat)
 
 #chatService = ChatService()

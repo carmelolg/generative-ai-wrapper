@@ -1,4 +1,15 @@
 class Prompt(object):
+    """
+    Represents a prompt that will be used to generate a response from a language model.
+
+    Attributes:
+        pattern (str): A pattern to guide the language model's elaboration.
+        question (str): The question to be answered by the language model.
+        language (str): The language of the prompt.
+        additional_requirement (str): Any additional requirements for the response.
+        file_content (str): Content of a file to be added to the prompt.
+    """
+
     def __init__(self):
         self.pattern = ''
         self.question = ''
@@ -14,6 +25,12 @@ class Prompt(object):
 
 
 class PromptBuilder(object):
+    """
+    Provides a fluent API for creating prompts.
+
+    Args:
+        prompt (Prompt): An optional Prompt object to customize the prompt.
+    """
 
     def __init__(self, prompt: Prompt = None):
         if prompt is None:
