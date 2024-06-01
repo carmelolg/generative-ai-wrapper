@@ -22,5 +22,13 @@ from services.ChatService import ChatService
 #print(_summary)
 
 chatService = ChatService()
-_chat = chatService.run("Calcolami la derivata della seguente funzione: (1/2)*(cos(x)^2) + (1/ln(x))")
+_chat = chatService.run("Generate a MIT License file in markdown.")
 print(_chat)
+
+#chatService = ChatService()
+#_chat = chatService.run("Calcolami la derivata della seguente funzione: (1/2)*(cos(x)^2) + (1/ln(x))")
+#print(_chat)
+
+#chatService = ChatService()
+#_chat = chatService.run(file='./README.md', message="Traducimi in inglese il seguente file")
+#print(_chat)
