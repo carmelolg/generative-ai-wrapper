@@ -1,19 +1,17 @@
-from services.PoeService import PoeService
+from services.llm.LLMBuilder import LLMBuilder
 from domain.PromptBuilder import PromptBuilder
 
 
 class ClassifierService(object):
 
     def run(self, message: str, categories=(), lang='English') -> str:
-        poeService = PoeService()
+        llm_service = LLMBuilder().build()
 
-        promptBuilder = PromptBuilder()
-        promptBuilder.defineLanguage(lang)
-        promptBuilder.definePattern(f'Use the following categories: {categories}')
-        promptBuilder.defineAdditionalContext(
-            'Your response will be used by a Python library to enable software utilizing AI.')
-        promptBuilder.defineAdditionalContext(
+        prompt_builder = PromptBuilder()
+        prompt_builder.language(lang)
+        prompt_builder.pattern(f'Use the following categories: {categories}')
+        prompt_builder.additional_requirements(
             'What will be provided as input to you is a sentence to be categorized based on the category in input')
-        promptBuilder.defineQuestion(message)
+        prompt_builder.question(message)
 
-        return poeService.chat(promptBuilder.build())
+        return llm_service.chat(prompt_builder.build())

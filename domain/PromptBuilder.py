@@ -3,40 +3,43 @@ class Prompt(object):
         self.pattern = ''
         self.question = ''
         self.language = ''
-        self.additionalRequirement = ''
-        self.additionalContext = ''
+        self.additional_requirement = ''
+        self.file_content = ''
 
     def __str__(self):
-        return f"Prompt: {self.getFullPrompt()}"
+        return f"Prompt: {self.get_full_prompt()}"
 
-    def getFullPrompt(self):
-        return self.language + self.pattern + self.additionalContext + self.additionalRequirement + self.question
+    def get_full_prompt(self):
+        return 'Hi,\n' + self.file_content + self.question + self.language + self.pattern + self.additional_requirement
 
 
 class PromptBuilder(object):
 
-    def __init__(self):
-        self.prompt = Prompt()
+    def __init__(self, prompt: Prompt = None):
+        if prompt is None:
+            self._prompt = Prompt()
+        else:
+            self._prompt = prompt
 
-    def defineLanguage(self, lang):
-        self.prompt.language += f"You must use the following language: {lang}\n"
+    def language(self, lang):
+        self._prompt.language += f"I'd like ask you to answer in this language: {lang}\n"
         return self
 
-    def definePattern(self, pattern):
-        self.prompt.pattern += f"You must use the following pattern for the response: {pattern}\n"
+    def pattern(self, pattern):
+        self._prompt.pattern += f"When you elaborate the answer, I gently ask you to follow this pattern: {pattern}\n"
         return self
 
-    def defineAdditionalRequirements(self, additionalRequirements):
-        self.prompt.additionalRequirement += f"Please, pay attention about this requirements: {additionalRequirements}\n"
+    def additional_requirements(self, additionalRequirements):
+        self._prompt.additional_requirement += f"Please, I'd like that your response consider also to {additionalRequirements}\n"
         return self
 
-    def defineAdditionalContext(self, additionalContext):
-        self.prompt.additionalContext += f"Please, consider this additional context: {additionalContext}\n"
+    def question(self, message):
+        self._prompt.question += f"{message}\n"
         return self
 
-    def defineQuestion(self, message):
-        self.prompt.question += f"The question is: {message}\n"
+    def file(self, filename, content):
+        self._prompt.file_content += f"I'm adding a file with the name {filename}, the content of this file is:\n{content}\n"
         return self
 
     def build(self):
-        return self.prompt
+        return self._prompt

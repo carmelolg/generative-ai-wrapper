@@ -1,0 +1,324 @@
+-------------------------------------------------
+- 			E-Commerce Customer Fissi			-
+-------------------------------------------------
+
+				Committenti
+
+------------------		---------------------
+- Marketing Kena -		-   Marketing TIM	-
+------------------		---------------------
+						- Picchiotti Morela (NIP e MNT)
+						- Salemme Stefano (CHO o CB e SA)
+				
+					
+				Key Account - Demand
+				 
+--------------------------------------------------
+- Silvana Bisogno
+- Lamberti Antonella
+--------------------------------------------------
+
+				Team 
+				 
+--------------------------------------------------
+- Lucia Marolo										(Chief)
+- Alessandro Raso, Carmelo La Gamba 				(Team Leader)
+- Francesca Cavalli 								(CHO + SA - Analista Funzionale / PM)
+- Cristina Borghi 									(NIP + MNP - Analista Funzionale / PM)
+- Roberto Mastrogirolamo 							(Configurazione Metaofferte + Analisi dei requisiti)
+- Carlo Mazzella									(Costruzione Metaofferte su SDC)
+- Florindo Buono		- Engineering				(PM Engineering)
+- Alessandro Morra 		- Engineering				(Riferimento tecnico Engineering)
+- Arturo Santaniello 	- Engineering				(Sviluppo Back-End microservizi)
+- Iuri Arpino 			- Engineering 				(Sviluppo Front-End NIP e MNP, Adobe XP Manager Forms e CMS)
+- Leonardo Valenti		- Engineering				(Sviluppo Front-End Javascript)
+- Roberto Curti			- Engineering				(API Gateway)
+- Vitale Monaco			- Engineering				(API Gateway)
+
+- Antonio Rega			- CTEL						Collaudo
+- Pietro Arleo			 							Collaudo
+
+- Rosolia Luciano									Code pubblicazione CMS
+- Abhishek Sahna									Code pubblicazione CMS
+
+- Strino Vincenzo									Catalogo
+
+--------------------------------------------------
+
+				Convenzioni
+
+--------------------------------------------------
+
+I rilasci sono divisi in range della durata di un mese. 
+Ogni anno ci sono 12 rilasci definiti dal suffisso Cx (Es. C1 per Gennaio, C7 per Luglio, C12 per Dicembre)				
+Le attività vengono pianificate dal Demand (vedi sopra), la richiesta arriva al Team che stima le attività (Engineering).
+Le attività vengono ripianificate in base alla stima e riorganizzate nel Cx di riferimento.		
+
+I rilasci vengono eseguiti il 25 di ogni mese e il 27 viene installato in Collaudo il KIT successivo.
+Durante il Cx di riferimento bisogna comunque continuare a pianificare e stabilire i requisiti del Cx+1		
+
+--------------------------------------------------
+
+				Convenzioni tecniche
+				
+--------------------------------------------------
+
+I pattern architetturali da rispettare sono quelli di FlyTogheter
+Il Front-End è gestito dal CMS di Adope
+Il Back-End è scritto in Spring Boot e rilasciato su PaaS OpenShift
+I microservizi hanno logica di aggregazione per far arrivare il dato pulito a FE, recuperano i dati da SDP e altri sistemi legacy o interni
+
+Quando si gestisce il carrello è di fatto un must:
+	-> HTTP GET		quando si richiedono informazioni a back-end
+	-> HTTP POST	quando viene creato il carrello 
+	-> HTTP PUT 	quando si aggiunge o si rimuove un OrderItem
+	-> HTTP PATCH	quando vengono modificate le personalInfo oppure informazioni di contorno raccolti nel funnel 
+
+--------------------------------------------------
+
+				Componenti web coinvolti
+
+--------------------------------------------------
+
+L'e-commerce detiene l'ownership di sola qualche componente del sito tim.it. Qui una lista:
+
+	-> Attivazione di nuove linee Fibra o ADSL tramite pulsante ATTIVA da Area Pubblica (Home Page o pagine del singolo prodotto)
+	-> Attivazione nuovi servizi standalone da pagina tim.it da Area Pubblica 
+	-> Attivazione nuovi servizi standalone MME da pagina tim.it da Area Privata
+	
+
+
+
+--------------------------------------------------
+
+				Metaofferta
+
+--------------------------------------------------
+
+La metaofferta non è nient'altro che un wrapper di un offerta in catalogo.
+Nasce dall'esigenza di rendere accessibile al marketing modifiche più frequenti alle offerte per renderle più dinamiche e funzionali al mercato.
+
+La metaofferta è un JSON formato così:
+
+{
+	id: "MO0000000XXX", // id della metaofferta
+	name: "TIM SUPER FIBRA WiFi - UPSELLING" // nome della metaofferta
+	description: "XXX", // descrizione metaofferta, compone anche il titolo del carrello
+	commercialSpeed: "1000", // velocità commerciale della metaofferta
+	seniorityConstraint: "AL", // 
+	...
+	...
+	product: {
+	
+		
+		
+		childDetails: [ 		
+			{
+				// SPECIFICA LA TECNOLOGIA
+				id: "", // id del servizio offerto
+				childDetails: [
+					{
+						// id della componente inclusa
+						id: "",
+						// tipo di elemento nel carrello. Costo di abbonamento vale per il primo elemento del carrello, una tantum per gli altri elementi
+						typePrice: "Costo di abbonamento | Contributo una tantum (o di attivazione)", 
+						// Visibilità nel carrello
+						isCartVisibleWeb: "Y|N",
+						// Priorità sul carrello
+						prioCartFT: "1..N",
+						// Nome del prodotto
+						ProductNameViaWeb: "",
+						// Gruppo di appartenenza dell'item. Standard, Tecnico, Upselling, Pack, ... 
+						// Tecnico 		= in riferimento alla specializzazione della metaofferta, sono elementi non visibili a carrello
+						// Standard 	= elementi visibili a carrello 
+						group: "Standard", 
+						// Tipo gruppo
+						typeGroup: "Inclusivo|
+					}
+				]
+			},
+			{
+				// SPECIFICA LE OPZIONI AGGIUNTIVE 
+			}			
+		]
+	
+	},
+	...
+}
+
+--------------------------------------------------
+
+				Metaopzione
+
+--------------------------------------------------
+
+La metaopzione è una configurazione di un prodotto in vendita in modalità standalone.
+La configurazione della metaopzione determina la visualizzazione in pagina di tutte le componenti.
+
+La metaopzione è un JSON formato così:
+
+{
+	...
+}
+
+--------------------------------------------------
+
+				Cart Composer
+
+--------------------------------------------------
+
+Il carrello è un JSON gestito dal software che viene modificato durante l'operazione di acquisto.
+
+Il cart-composer è un servizio back-end che implementa la logica di business del catalogo per darlo in output ai client web.
+È di fatto un transaltor/interpreter che fornisce e traduce il catalogo di TIM alle web application.
+
+Sommariamente si comporta nella seguente maniera:
+
+1° Step			= Recupera la copertura tecnica sul sistema JIVE e LIDO (vedi glossario)  
+2° Step			= Effettua una chiamata al motore BRE (vedi glossario) per recuperare il profilo tecnico del cliente
+3° Step			= Restituisce l'offerta migliore dedicata al cliente in input (grazie alle informazioni di partenza e al motore a regole)
+
+-> 	Al cart-composer l'applicativo passa in input le informazioni che costituiscono tutto il carrello
+<- 	Il cart-composer ci restituisce un ID carrello (di solito nel formato EF-alfanumerico) che viene salvato a DB
+
+<->	Il carrello ha un servizio con degli orderItem (metaOffer -> product -> childDetails)
+
+Ogni orderItem sono elementi del catalogo che vengono movimentati durante la lavorazione.
+Si possono aggiungere elementi perché previsti in Upselling dalla metaofferta in base al cliente.
+Si possono rimuovere elementi in runtime
+
+A Front-End vengono visualizzate, e quindi recuperate da Back-End, solamente gli orderItem PROVIDE. Per questione di privacy il back-end filtra i risultati.
+
+Il quoteSummary dell'oggetto infine è costituito da tutti gli elementi che formano il prezzo finale del carrello.
+
+--------------------------------------------------
+
+				Sistema di pagamento
+
+--------------------------------------------------
+
+È possibile pagare tramite carta di credito, iban.
+
+-> Se viene scelto l'iban, verrà richiamata un API che verifica la correttezza dell'iban.
+-> Se si sceglie di pagare con carta di credito, si inserisce il numero della carta.
+
+Il pagamento con carta di credito può essere di due tipo: RESERVATION o VERIFICATION
+
+RESERVATION			= È quanto il pagamento viene completato durante la fase di acquisto
+VERIFICATION		= È quanto il pagamento viene completato successivamente (o richiesto successivamente) ma si vuole controllare la validità della carta immessa. (il classico centesimo rimborsato)
+
+
+
+
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+
+
+				Glossario dei termini
+				
+AGESP			= Codice Epica							- Contiene RU e SM
+ATG				= Catalogo								- Il catalogo di tutte le offerte
+BRE				= Motore a regole delle metaofferte		- È il motore a regole che restituisce un insieme di offerte in base al cliente in input
+CBE				= Customer Back End						- Team che si occupa dell'implementazione Backend di MyTIM e altri servizi
+CCC				= CRM									- Sistema per gestire il customer care, attivazione ordini etc.
+CDC				= Carta di credito						-
+CHF				= Front End di CCC						- come sopra
+CHO (o CB)		= Change Order							- Utenti TIM che cambiano piano tariffario o promozione, o anche l'attivazione di uno standalone
+CIC				= Codici univoci di prodotto			- WEB non li usa
+CRX				= Content Repository di Adobe			- *
+CVM				= Tipologia di campagne					- Sono delle campagne con offerte scontate
+FAST TRACK		= eseguire un ordine 
+FUNNEL			= Funzionalità intera					- Un'intera funzionalità gestita dall'e-commerce
+GPA				= Sistema di presa appuntamento			- Quando un utente vuole prendere un appuntamento con il personale tecnico TIM richiama da front-end l'applicativo GPA
+GUP				= Gestore unico pagamenti				- Back-end che espone API sui pagamenti
+ICD				= Creazione campagne marketing			- ICD è un motore per la creazione di campagne di marketing e per la definizione dei target. Da in ouput i treatment e non le metaofferte.
+IP2CLI			= Provider TIM, da info utente 			- A partire dall'IP del client dà in output informazioni sull'utente collegato come numero di telefono, consistenze. Restituisce false se non è su rete TIM.
+KIT				= Zip con le attività rilasciate		- Ogni ambiente riceve i kit installabili con dentro tutto il contenuto del rilascio, dai js ai componenti del cms
+JIVE			= Sistema per la copertura linea		- Sistema che calcola la copertura della linea ADSL, FTTH
+LEVE			= Check per controllo anti-frode		- Ci sono una serie di controlli e blocchi sugli utenti per ogni ordine. 
+														  Esistono due tipi di leve:
+															Leve Informative -> l'ordine non subisce blocco ma sono presenti dei warning (ad esempio documento scaduto)
+															Leve Dispositive -> l'ordine è bloccato, bisogna eseguire delle azioni prima di completare l'ordine (in caso di cliente moroso etc.)
+															
+															Mappa delle LEVE attualmente censite su DB:
+															
+															CSO_168_001 | Inserimento Documento di Identità
+															CSO_168_002 | Pagamento Credito
+															CSO_168_003 | Domiciliazione su CdC
+															CSO_168_004 | Domiciliazione su IBAN
+															CSO_168_005 | Entry Ticket Modem
+															CSO_168_006 | Entry Ticket Cauzione
+															CSO_168_007 | Offerta Ricaricabile
+															CSO_168_008 | No Modem
+	
+LIDO			= Sistema per la copertura linea		- Sistema che calcola la copertura della linea FWA
+LOV				= List of value							- Dominio di applicazione
+METAINIZIATIVA	= ???
+METAOFFERTA		= Metaofferta							- È un JSON di configurazione di un'offerta vendibile da e-commerce. È un wrapper del catalogo ATG, serve per dare la possibilità al marketing di fare offerte più accattivanti rispetto a quelle presenti a catalogo. 
+METAOPZIONE		= Metaopzione							- È un JSON di configurazione di un'opzione vendibile da e-commerce. È un componente contenuto nella metaofferta con l'opzione aggiunta all'offerta in vendita (Ad esempio una MME etc). Può essere anche venduta separatamente come singolo prodotto sull'e-commerce.
+METASERVICE		= Metaservizio							- È una metaofferta relativa ad un OTT, o MME. È un concetto più che una componente
+MKT				= Marketing								- Area di TIM che elabora operazioni di marketing
+MNP				= Rientri 								- Utenti provenienti da altri operatori
+MME				= Multimedia							- Neflix, Amazon Prime, Tim Vision Calcio e Sport, etc.
+NIP (o AL) 		= Nuovo impianto (o attivazione) 		- Utenti alla prima registrazione
+OLO				= Cliente senza linee Tim				- 
+OTT				= Opzione MME che non dipende da tech	- Questa opzione verrà rappresentata da una metaofferta o da una metaopzione con un L0 fittizio (con asterisco *) poiché non dipende dalla tecnologia
+PAN				= numero a 16 cifre della carta			- Intendiamo il numero della carta di credito
+PPM				= Codice nuovo requisito				- È un codice usato dal marketing per identificare un nuovo requisito. 
+														Si trasforma in AGESP quando atterrà sul sistema di segnalazione interno
+RU				= Requisito Utente						- È un requisito proposto dall'utente oppure una Change Request
+SA				= Standalone							- Offerte custom che non dipendono da un programma in particolare
+SA MME			= Standalone Multimedia					- Attivazioni standalone di servizi multimedia
+SDC				= Applicativo redazione metaofferte		- È una GUI che serve per costruire le metaofferte
+SIF				= Specifiche di interfaccia				- Swagger
+SM				= Segnalazione anomalie in collaudo		- 
+ST 				= Shaping tecnico						- Giro di documentazione tecnica-funzionale redatta da Demand dopo il RU ricevuto da MKT
+TIM UNICA		= Aggregazione di linee tim				- È un programma TIM per collegare allo stesso conto più consistenze
+TRA				= Tim Ricarica Automatica				- 
+TREATMENT		= Offerte destinate al cliente			- Il treatment è un offerta customizzata per profilo di cliente. Si distingue dalla metaofferta 
+UPSELLING		= Operazione post acquisto 				- In fase di completamento del carrello 
+WBS				= Comportamento in caso di errore		- Inserisci il numero per essere richiamato
+
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+
+
+				Dati per TEST in Collaudo
+				
+Sede impianto coperto FWA						Sabaudia, Strada Acquaviva, 90
+Sede impianto coperto fino a 200 Mega			Sabaudia, via Carlo Alberto, 5
+Sede impianto coperto fino a 100 Mega			Bologna, via Centotrecento, 5
+Sede impianto coperto fino a 30 Mega			Bologna, via Gandusio, 31
+Sede impianto coperta da ADSL					Bologna, via Notai, 189/F
+
+

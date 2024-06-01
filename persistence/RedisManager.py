@@ -7,12 +7,12 @@ class RedisManager(object):
     __constants = Constants
 
     def __init__(self):
-        self.__redis = redis.Redis(host=self.__constants.redisHost, port=self.__constants.redisPort)
+        self.__redis = redis.Redis(host=self.__constants.redis_host, port=self.__constants.redis_port)
 
-    def getValue(self, key):
+    def get_value(self, key):
         return self.__redis.get(key)
 
-    def setValue(self, key, value):
+    def set_value(self, key, value):
         self.__redis.set(key, value)
 
     def db(self):

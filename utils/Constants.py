@@ -7,16 +7,18 @@ import os
 
 
 class Constants(object):
-    poeTokenB = os.environ.get('POE_TOKEN_B', None)
-    poeTokenLat = os.environ.get('POE_TOKEN_LAT', None)
-    redisHost = os.environ.get('REDIS_HOST', None)
-    redisPort = os.environ.get('REDIS_PORT', None)
-    poeModel = os.environ.get('POE_MODEL', None)
+    poe_token_b = os.environ.get('POE_TOKEN_B', None)
+    poe_token_lat = os.environ.get('POE_TOKEN_LAT', None)
+    redis_host = os.environ.get('REDIS_HOST', None)
+    redis_port = os.environ.get('REDIS_PORT', None)
+    poe_model = os.environ.get('POE_MODEL', None)
+    local_model = os.environ.get('LOCAL_MODEL', None)
+    service = os.environ.get('ACTIVE_SERVICE', 'local')
 
     __instance = None
 
     @staticmethod
-    def getInstance():
+    def get_instance():
         if Constants.__instance is None:
             Constants()
         return Constants.__instance
