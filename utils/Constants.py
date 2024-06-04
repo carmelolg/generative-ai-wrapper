@@ -14,6 +14,7 @@ class Constants(object):
     poe_model = os.environ.get('POE_MODEL', None)
     local_model = os.environ.get('LOCAL_MODEL', None)
     service = os.environ.get('ACTIVE_SERVICE', 'local')
+    log_level = os.environ.get('LOG_LEVEL', 'INFO')
 
     __instance = None
 

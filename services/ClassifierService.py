@@ -9,9 +9,10 @@ class ClassifierService(object):
 
         prompt_builder = PromptBuilder()
         prompt_builder.language(lang)
-        prompt_builder.pattern(f'Use the following categories: {categories}')
+        prompt_builder.pattern(f'Use the following categories: {categories}. Don\'t justify the response, just give '
+                               f'me only the the category chose.')
         prompt_builder.additional_requirements(
-            'What will be provided as input to you is a sentence to be categorized based on the category in input')
+            'what will be provided as input to you is a sentence to be categorized based on the category in input')
         prompt_builder.question(message)
 
         return llm_service.chat(prompt_builder.build())

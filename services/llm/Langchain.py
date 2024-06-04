@@ -7,10 +7,13 @@ from utils.Constants import Constants
 
 from langchain_community.llms import Ollama
 
+from utils.Logger import Logger
+
 
 class Langchain(AbstractLLM):
     __db = RedisManager()
     __constants = Constants.get_instance()
+    __logger = Logger.get_instance(__name__)
 
     def __init__(self):
         return
@@ -32,7 +35,7 @@ class Langchain(AbstractLLM):
 
         final_prompt = prompt_builder.build().get_full_prompt()
 
-        print(final_prompt)
+        self.__logger.info(final_prompt)
 
         try:
             llm = Ollama(model=model)
