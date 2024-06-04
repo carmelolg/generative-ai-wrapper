@@ -1,7 +1,6 @@
 import logging
 
 from utils.Constants import Constants
-from utils.LoggerCustomFormatter import LoggerCustomFormatter
 
 
 class Logger(object):
