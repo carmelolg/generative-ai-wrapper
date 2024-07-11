@@ -29,7 +29,7 @@ class Poe(AbstractLLM):
         if poe_token_b is None or poe_token_lat is None:
             raise Exception("Poe token missed. Please set on the environment the tokenB and the tokenLat")
 
-        return json.loads(json.dumps({"b": poe_token_b, "lat": poe_token_lat}))
+        return json.loads(json.dumps({"p-b": poe_token_b, "p-lat": poe_token_lat}))
 
     def chat(self, prompt: Prompt, files: list = [], model=__constants.poe_model) -> str:
 
@@ -41,7 +41,7 @@ class Poe(AbstractLLM):
         thread = self.__db.get_value('poeId')
         thread = normalize_thread_id(thread)
 
-        client = PoeApi(cookie=self.tokens())
+        client = PoeApi(tokens=self.tokens())
 
         response = ''
 

@@ -1,4 +1,8 @@
+import base64
+
+from langchain_community.chat_models import ChatOllama
 from langchain_community.llms.ollama import OllamaEndpointNotFoundError
+from langchain_core.messages import HumanMessage
 
 from persistence.RedisManager import RedisManager
 from domain.PromptBuilder import Prompt, PromptBuilder
@@ -7,6 +11,7 @@ from utils.Constants import Constants
 
 from langchain_community.llms import Ollama
 
+from utils.ImageUtils import ImageUtils
 from utils.Logger import Logger
 
 
@@ -14,6 +19,7 @@ class Langchain(AbstractLLM):
     __db = RedisManager()
     __constants = Constants.get_instance()
     __logger = Logger.get_instance(__name__)
+    __image_utils = ImageUtils.get_instance()
 
     def __init__(self):
         return
@@ -28,6 +34,7 @@ class Langchain(AbstractLLM):
 
             for filename in files:
                 with open(filename, 'r', errors='ignore') as file:
+                    #content = base64.b64encode(file.read()).decode('utf-8')
                     contents.append((filename, file.read()))
 
             for content in contents:
@@ -38,9 +45,9 @@ class Langchain(AbstractLLM):
         self.__logger.info(final_prompt)
 
         try:
-            llm = Ollama(model=model)
+            llm = ChatOllama(model=model)
             response = llm.invoke(final_prompt)
         except OllamaEndpointNotFoundError:
             raise Exception('Local model not running or not installed')
 
-        return response
+        return response.content
