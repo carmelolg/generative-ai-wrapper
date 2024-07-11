@@ -5,9 +5,9 @@ from services.SentimentalAnalysisService import SentimentalAnalysisService
 from services.SummarizeService import SummarizeService
 from services.ChatService import ChatService
 
-sentimentalAnalyzer = SentimentalAnalysisService()
-sentiment = sentimentalAnalyzer.run('Ho perso 10k€ al casinò questa mattina!', categories=['happiness', 'sadness', 'neutral'], lang='italiano')
-print(sentiment)
+#sentimentalAnalyzer = SentimentalAnalysisService()
+#sentiment = sentimentalAnalyzer.run('Ho perso 10k€ al casinò questa mattina!', categories=['happiness', 'sadness', 'neutral'], lang='italiano')
+#print(sentiment)
 
 #classifier = ClassifierService()
 #_class = classifier.run("I like so much Dragonball", ['Uomo', 'Donna', 'bambino', 'bambina'])
@@ -33,6 +33,6 @@ print(sentiment)
 #_chat = chatService.run(file='./README.md', message="Traducimi in inglese il seguente file")
 #print(_chat)
 
-#chatService = ChatService()
-#_chat = chatService.run(file='./static/image-gen-ai.JPG', message="Are there some boats there? What is the colour?")
-#print(_chat)
+chatService = ChatService()
+_chat = chatService.run(file='./static/image-gen-ai.JPG', message="Are there some boats there? What is the colour?")
+print(_chat)

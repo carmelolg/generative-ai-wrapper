@@ -9,7 +9,7 @@ class SummarizeService(object):
 
         prompt_builder = PromptBuilder()
         prompt_builder.language(lang)
-        prompt_builder.pattern('[Question] My question\n[Response] Your response')
+        #prompt_builder.pattern('[Question] My question\n[Response] Your response')
         prompt_builder.additional_requirements(additional_requirement)
         prompt_builder.question(f'Can you summarize this file?')
 
