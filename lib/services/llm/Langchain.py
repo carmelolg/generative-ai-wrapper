@@ -1,18 +1,14 @@
-import base64
 
-from langchain_community.chat_models import ChatOllama
+from langchain_ollama import ChatOllama
 from langchain_community.llms.ollama import OllamaEndpointNotFoundError
-from langchain_core.messages import HumanMessage
 
-from persistence.RedisManager import RedisManager
-from domain.PromptBuilder import Prompt, PromptBuilder
-from services.llm.AbstractLLM import AbstractLLM
-from utils.Constants import Constants
+from lib.persistence.RedisManager import RedisManager
+from lib.domain.PromptBuilder import Prompt, PromptBuilder
+from lib.services.llm.AbstractLLM import AbstractLLM
+from lib.utils.Constants import Constants
 
-from langchain_community.llms import Ollama
-
-from utils.ImageUtils import ImageUtils
-from utils.Logger import Logger
+from lib.utils.ImageUtils import ImageUtils
+from lib.utils.Logger import Logger
 
 
 class Langchain(AbstractLLM):

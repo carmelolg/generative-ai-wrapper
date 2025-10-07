@@ -1,6 +1,6 @@
 import logging
 
-from utils.Constants import Constants
+from lib.utils.Constants import Constants
 
 
 class Logger(object):

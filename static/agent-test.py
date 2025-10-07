@@ -4,7 +4,7 @@ from langchain.agents import AgentType
 from langchain.agents import load_tools
 from langchain_community.chat_models import ChatOllama
 
-from utils.Constants import Constants
+from lib.utils import Constants
 
 __constants = Constants.get_instance()
 model=__constants.local_model

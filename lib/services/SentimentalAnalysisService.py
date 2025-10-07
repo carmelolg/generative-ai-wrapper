@@ -1,5 +1,5 @@
-from services.llm.LLMBuilder import LLMBuilder
-from domain.PromptBuilder import PromptBuilder
+from lib.services.llm.LLMBuilder import LLMBuilder
+from lib.domain.PromptBuilder import PromptBuilder
 
 
 class SentimentalAnalysisService(object):

@@ -1,6 +1,6 @@
 from abc import ABC
 
-from domain.PromptBuilder import Prompt
+from lib.domain.PromptBuilder import Prompt
 
 
 class AbstractLLM(ABC):

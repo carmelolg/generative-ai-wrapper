@@ -2,10 +2,10 @@ import json
 
 from poe_api_wrapper import PoeApi
 
-from domain.PromptBuilder import Prompt
-from persistence.RedisManager import RedisManager
-from services.llm.AbstractLLM import AbstractLLM
-from utils.Constants import Constants
+from lib.domain.PromptBuilder import Prompt
+from lib.persistence.RedisManager import RedisManager
+from lib.services.llm.AbstractLLM import AbstractLLM
+from lib.utils.Constants import Constants
 
 
 def normalize_thread_id(thread):
