@@ -20,14 +20,14 @@ from lib.services.ChatService import ChatService
 #_chat = chatService.run(file='./domain/PromptBuilder.py',  message="What the method question do?", lang='english')
 #print(_chat)
 
-chatService = ChatService()
-_chat = chatService.run("Calcolami la derivata della seguente funzione: (1/2)*(cos(x)^2) + (1/ln(x))")
-print(_chat)
+#chatService = ChatService()
+#_chat = chatService.run("Calcolami la derivata della seguente funzione: (1/2)*(cos(x)^2) + (1/ln(x))")
+#print(_chat)
 
 #chatService = ChatService()
 #_chat = chatService.run(file='./README.md', message="Traducimi in inglese il seguente file")
 #print(_chat)
 
-# chatService = ChatService()
-# _chat = chatService.run(file='./static/image-gen-ai.JPG', message="Are there some boats there? What is the colour?")
-# print(_chat)
+chatService = ChatService()
+_chat = chatService.run(file='./static/image-gen-ai.JPG', message="Are there some boats there? What is the colour?")
+print(_chat)
