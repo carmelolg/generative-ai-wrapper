@@ -6,6 +6,6 @@ _chat = chatService.run("Considera il profilo instagram __wvll, ogni foto ha una
                         " ."
                         " 📅 2025"
                         " 📍 Fréjus Plage, France"
-                        "Puoi generarmi per la foto in input un testo coerente?", file='../static/image-gen-ai.JPG')
+                        "Puoi generarmi per la foto in input un testo coerente?", file='../static/test.jpg')
 
 print(_chat)

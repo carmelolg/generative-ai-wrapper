@@ -1,3 +1,4 @@
+import base64
 
 from langchain_ollama import ChatOllama
 from langchain_community.llms.ollama import OllamaEndpointNotFoundError
@@ -20,18 +21,19 @@ class Langchain(AbstractLLM):
     def __init__(self):
         return
 
-    def chat(self, prompt: Prompt, files=[], model=__constants.local_model) -> str:
+    def chat(self, prompt: Prompt, files=None, model=__constants.local_model) -> str:
+
         prompt_builder = PromptBuilder(prompt)
         if model is None:
             raise Exception("Model is not defined")
 
-        if len(files) > 0:
+        if files is not None and len(files) > 0:
             contents = []
 
             for filename in files:
-                with open(filename, 'r', errors='ignore') as file:
-                    #content = base64.b64encode(file.read()).decode('utf-8')
-                    contents.append((filename, file.read()))
+                with open(filename, 'rb') as file:
+                    content = base64.b64encode(file.read()).decode('utf-8')
+                    contents.append((filename, content))
 
             for content in contents:
                 prompt_builder.file(content[0], content[1])
